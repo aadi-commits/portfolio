@@ -313,8 +313,8 @@ export const siteMeta = {
   title: "Adit Navle — Full-Stack & Mobile Engineer",
   description:
     "Adit Navle — full-stack & mobile engineer (Node.js, Angular, React Native, AI/LLM). Shipped a telehealth app to Google Play, cut load times 60%, built a production RAG pipeline. Explore live demos and ask my portfolio anything.",
-  // TODO: Production URL once deployed (for canonical + OG). No trailing slash.
-  url: "https://your-domain.com",
+  // Production URL (canonical + Open Graph + sitemap). No trailing slash.
+  url: "https://adit-navle-portfolio.netlify.app",
   // TODO: Optional social preview image in /public (1200×630).
   ogImage: "/og.png",
   // TODO: Your X/Twitter handle for card attribution (or leave "").
