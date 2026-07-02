@@ -1,0 +1,261 @@
+@import "tailwindcss";
+
+/* ════════════════════════════════════════════════════════════════════════
+   Terminal / IDE theme — editor palette with syntax-highlight accents.
+   ════════════════════════════════════════════════════════════════════════ */
+:root {
+  --background: #0b0f14;
+  --surface: #0f141b;
+  --surface-2: #151c25;
+  --border: #232c38;
+  --foreground: #c9d4e0;
+  --muted: #6b7889; /* "comment" gray */
+
+  /* Primary accent = terminal green */
+  --accent: #3fb950;
+  --accent-2: #7ee787;
+  --accent-contrast: #04140a;
+
+  /* Syntax colors */
+  --str: #7ee787; /* strings / green */
+  --fn: #79c0ff; /* functions / blue */
+  --kw: #d2a8ff; /* keywords / purple */
+  --num: #ffa657; /* numbers / orange */
+  --cls: #e3b341; /* classes / yellow */
+  --err: #ff7b72; /* errors / red */
+  --cyan: #56d4dd;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-accent-contrast: var(--accent-contrast);
+
+  --color-str: var(--str);
+  --color-fn: var(--fn);
+  --color-kw: var(--kw);
+  --color-num: var(--num);
+  --color-cls: var(--cls);
+  --color-err: var(--err);
+  --color-cyan: var(--cyan);
+
+  --font-sans: var(--font-geist-mono), ui-monospace, "SF Mono", monospace;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", monospace;
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-mono);
+  font-feature-settings: "liga" 0; /* keep code-like, no fancy ligatures */
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+/* Faint editor grid on a fixed, GPU-composited layer (painted once — no
+   per-frame repaint, so it doesn't cause scroll jank). */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--border) 50%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--border) 50%, transparent) 1px, transparent 1px);
+  background-size: 46px 46px;
+  transform: translateZ(0);
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 40%, transparent);
+  color: var(--accent-2);
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--surface-2);
+  border-radius: 2px;
+  border: 3px solid var(--background);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2a3644;
+}
+
+/* ── Utilities ──────────────────────────────────────────────────────────── */
+@utility glass {
+  background: color-mix(in oklab, var(--surface) 88%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+/* Shell "traffic light" dots */
+@utility dots {
+  display: inline-flex;
+  gap: 6px;
+}
+
+/* Prompt marker: <span class="prompt">command</span> */
+.prompt::before {
+  content: "$ ";
+  color: var(--accent);
+}
+.comment {
+  color: var(--muted);
+}
+.tok-str { color: var(--str); }
+.tok-fn { color: var(--fn); }
+.tok-kw { color: var(--kw); }
+.tok-num { color: var(--num); }
+.tok-cls { color: var(--cls); }
+
+/* Editor window frame */
+.window {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  overflow: hidden;
+}
+.window-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--muted);
+}
+.dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+}
+
+/* Line-number gutter */
+.linenums {
+  counter-reset: ln;
+}
+.linenums > * {
+  position: relative;
+  padding-left: 3.25rem;
+}
+.linenums > *::before {
+  counter-increment: ln;
+  content: counter(ln);
+  position: absolute;
+  left: 0;
+  width: 2.25rem;
+  text-align: right;
+  color: color-mix(in oklab, var(--muted) 55%, transparent);
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+/* Form inputs */
+.input {
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  padding: 0.6rem 0.8rem;
+  font-size: 0.9rem;
+  font-family: var(--font-mono);
+  color: var(--foreground);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.input::placeholder {
+  color: color-mix(in oklab, var(--muted) 80%, transparent);
+}
+.input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 22%, transparent);
+}
+
+/* ── Animations ─────────────────────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--accent) 50%, transparent); }
+  70% { box-shadow: 0 0 0 10px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+.pulse-ring { animation: pulse-ring 2s infinite; }
+
+@keyframes flow-dash { to { stroke-dashoffset: -16; } }
+
+@keyframes blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+.cursor-blink { animation: blink 1.05s step-end infinite; }
+
+@keyframes type-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+.type-line { animation: type-in 0.35s ease both; }
+
+/* Robot */
+@keyframes robot-talk { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
+@keyframes robot-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes robot-blink { 0%, 92%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.1); } }
+@keyframes robot-antenna { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+.robot-mouth { transform-origin: center; }
+.robot-speaking .robot-mouth { animation: robot-talk 0.26s ease-in-out infinite; }
+.robot-eye { transform-origin: center; transform-box: fill-box; animation: robot-blink 4.5s ease-in-out infinite; }
+.robot-antenna-light { animation: robot-antenna 1.6s ease-in-out infinite; }
+.robot-float { animation: robot-float 3s ease-in-out infinite; }
+
+@keyframes chat-pop {
+  from { opacity: 0; transform: translateY(12px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.chat-pop { animation: chat-pop 0.22s cubic-bezier(0.22, 1, 0.36, 1); }
+
+@keyframes robot-emerge {
+  from { transform: translateY(40px) scale(0.9); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+.robot-emerge { animation: robot-emerge 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes robot-wave { 0%, 100% { transform: rotate(6deg); } 50% { transform: rotate(-22deg); } }
+.robot-hand { transform-origin: bottom center; transform-box: fill-box; }
+.robot-waving .robot-hand { animation: robot-wave 0.5s ease-in-out infinite; }
+@keyframes robot-soundwave { 0% { opacity: 0; transform: scale(0.5); } 40% { opacity: 0.9; } 100% { opacity: 0; transform: scale(1.4); } }
+.robot-wave-arc { transform-origin: left center; transform-box: fill-box; opacity: 0; }
+.robot-speaking .robot-wave-arc { animation: robot-soundwave 1.1s ease-out infinite; }
+.robot-speaking .robot-wave-arc:nth-child(2) { animation-delay: 0.35s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}

@@ -1,0 +1,9 @@
+# Netlify build configuration for this Next.js (App Router) app.
+# Netlify auto-installs the Next.js Runtime, which serves the static pages from
+# the CDN and runs the API routes (/api/chat, /api/contact) as serverless
+# functions. Set your env vars in: Site settings → Environment variables.
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "22"
